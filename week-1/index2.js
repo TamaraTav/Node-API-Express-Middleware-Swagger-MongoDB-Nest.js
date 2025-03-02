@@ -1,6 +1,10 @@
 import http from 'http';
 import fs from 'fs';
 import url from 'url';
+import slugify from "slugify";
+
+const str = slugify("Hello, World!", {lower: true});
+//რამდენიმე სიტყვას აერთებს ერთმანეთთან ტირეებით და გარდაქმნის პატარა ასოებად ყველაფერს
 
 
 const server = http.createServer((req, res) => {
