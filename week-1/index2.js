@@ -2,8 +2,9 @@ import http from 'http';
 import fs from 'fs';
 import url from 'url';
 import slugify from "slugify";
+const posts = fs.readFileSync('data.json', "utf8");
 
-const str = slugify("Hello, World!", {lower: true});
+// const str = slugify("Hello, World!", {lower: true});
 //რამდენიმე სიტყვას აერთებს ერთმანეთთან ტირეებით და გარდაქმნის პატარა ასოებად ყველაფერს
 
 
@@ -13,14 +14,14 @@ const server = http.createServer((req, res) => {
 
     if (pathname === '/') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('HELLO WORD !!!');
+        res.end('Home page!!!');
+
     } else if (pathname === '/login') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('LOGIN !!!');
 
     } else if (pathname === '/posts') {
-
-        const posts = fs.readFileSync('data.json', "utf8");
+        // const posts = fs.readFileSync('data.json', "utf8");
 
         if(id) {
             const post = JSON.parse(posts).find((post) => post.id === Number(id));
@@ -32,10 +33,17 @@ const server = http.createServer((req, res) => {
         res.end(posts);
     }
 
-       else if (pathname === '/about') {
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end('About US !!!');
-        }
+    else if (pathname === '/about') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('About Page !!!');
+
+    }  else {
+        // Default case for unmatched routes
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+    }
+       //აქ უნდა დავწერო ნებისმიერ მისამართზე რომ "404 Not Found" გამოიტანოს
+
 })
 
 server.listen(4040, "localhost", () => {
