@@ -1,4 +1,6 @@
 import http from 'http';
+import fs from 'fs';
+
 
 const server = http.createServer((req, res) => {
     if (req.url === '/') {
@@ -7,8 +9,13 @@ const server = http.createServer((req, res) => {
     } else if (req.url === '/login') {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('LOGIN !!!');
+
+    } else if (req.url === '/posts') {
+        const posts = fs.readFileSync('data.json', "utf8");
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(posts);
     }
-        if (req.url === '/about') {
+       else if (req.url === '/about') {
             res.writeHead(200, { 'Content-Type': 'text/plain' });
             res.end('About US !!!');
         }
