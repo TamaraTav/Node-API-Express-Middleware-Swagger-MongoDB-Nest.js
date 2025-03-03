@@ -39,6 +39,18 @@ app.put("/products/:id", (req, res) => {
     res.json(newProduct);
 })
 
+//პროდუქტის მხოლოდ ერთი მონაცემის განახლება
+app.path("/products/:id", (req, res) => {
+    const products = JSON.parse(data);
+    const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
+    const newProduct ={...products[productIndex], ...req.body} ;// აქამდე რაც იყო ვტოვებ იმას,
+    // ბადიდან რაც მომივა იმ პროპერთის ვანახლებ
+    products[productIndex] = newProduct;
+    fs.writeFileSync("./data/products.json", JSON.stringify(products));
+    res.json(newProduct);
+})
+
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
