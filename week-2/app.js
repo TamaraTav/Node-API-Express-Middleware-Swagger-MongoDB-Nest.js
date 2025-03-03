@@ -50,6 +50,14 @@ app.path("/products/:id", (req, res) => {
     res.json(newProduct);
 })
 
+//პროდუქტის წაშლა
+app.delete("/products/:id", (req, res) => {
+    const products = JSON.parse(data);
+    const newProducts = products.filter((product) => product.id !== parseInt(req.params.id));
+    fs.writeFileSync("./data/products.json", JSON.stringify(newProducts));
+    res.status(200).send("Product deleted successfully.");
+})
+
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
