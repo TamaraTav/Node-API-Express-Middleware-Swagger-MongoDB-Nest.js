@@ -28,6 +28,17 @@ app.post("/products", (req, res) => {
     res.status(201).json(newProduct);
 });
 
+//პროდუქტის  მონაცემების განახლება
+app.put("/products/:id", (req, res) => {
+    const products = JSON.parse(data);
+    const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
+    const newProduct = req.body; //ბადიდან წამოსული პროდუქტი
+    products[productIndex] = newProduct; // პროდუქტებიდან ამოვიღებ კონკრეტულად იმ ინდექსის მქონე ელემენტს
+    //რომლის შეცვლაც მინდა და შევცვლი იმით, რასაც კლიენტი გამმომიგზავნის.
+    fs.writeFileSync("./data/products.json", JSON.stringify(products)); //განახლებულს ჩავწერ მონაცემთა ბაზაში
+    res.json(newProduct);
+})
+
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
