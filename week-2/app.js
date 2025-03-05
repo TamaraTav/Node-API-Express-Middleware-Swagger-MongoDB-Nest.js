@@ -14,6 +14,8 @@ const data = fs.readFileSync("./data/products.json", "utf8");
 //     // res.json("Welcome");
 // })
 
+
+
 app.get("/products", (req, res) => {
     res.json(JSON.parse(data));
 })
@@ -58,6 +60,22 @@ app.delete("/products/:id", (req, res) => {
     res.status(200).send("Product deleted successfully.");
 })
 
+
+//stock-ი უნდა შემცირდეს 1-ით ყიდვის შემთხვევაში
+app.post("/buy/:id", (req, res) => {
+    const productId = parseInt(req.params.id);
+
+    const products = JSON.parse(data);
+    const productIndex = products.findIndex((product) => product.id === productId);
+    products[productIndex] = {...products[productIndex],
+        stock: products[productIndex].stock-1};
+    fs.writeFileSync("./data/products.json", JSON.stringify(products));
+
+    res.json({
+        massage: "you buy successfully!",
+        data: products[productIndex],
+    })
+})
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
