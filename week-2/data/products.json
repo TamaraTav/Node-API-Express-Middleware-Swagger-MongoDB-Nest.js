@@ -4,14 +4,14 @@
     "name": "Wireless Mouse",
     "price": 25.99,
     "description": "Ergonomic wireless mouse with adjustable DPI settings.",
-    "stock": 9
+    "stock": 0
   },
   {
     "id": 2,
     "name": "Mechanical Keyboard",
     "price": 79.99,
     "description": "RGB backlit mechanical keyboard with blue switches.",
-    "stock": 6
+    "stock": 5
   },
   {
     "id": 4,

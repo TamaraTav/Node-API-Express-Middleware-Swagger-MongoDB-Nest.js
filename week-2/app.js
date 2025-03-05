@@ -67,6 +67,11 @@ app.post("/buy/:id", (req, res) => {
 
     const products = JSON.parse(data);
     const productIndex = products.findIndex((product) => product.id === productId);
+
+    if (products[productIndex].stock < 1 ) {
+        return res.status(406).json({message: `Product in Stock is 0`});
+    }
+    ///
     products[productIndex] = {...products[productIndex],
         stock: products[productIndex].stock-1};
     fs.writeFileSync("./data/products.json", JSON.stringify(products));
