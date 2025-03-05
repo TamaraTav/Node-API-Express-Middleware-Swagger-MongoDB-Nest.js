@@ -21,6 +21,12 @@
     "stock": 7
   },
   {
+    "id": 5,
+    "name": "Portable SSD",
+    "price": 129.99,
+    "description": "1TB high-speed portable SSD with USB 3.1 interface."
+  },
+  {
     "id": 6,
     "name": "Smartwatch",
     "price": 199.99,
@@ -69,13 +75,5 @@
     "stock": 8,
     "id": 1741206074082,
     "createdAt": "2025-03-05T20:21:14.082Z"
-  },
-  {
-    "name": " სამსუნგის ტელევიზორი",
-    "price": 500,
-    "description": "Ergonomic",
-    "stock": 8,
-    "id": 1741207250757,
-    "createdAt": "2025-03-05T20:40:50.757Z"
   }
 ]
