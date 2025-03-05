@@ -71,7 +71,6 @@ app.post("/buy/:id", (req, res) => {
     if (products[productIndex].stock < 1 ) {
         return res.status(406).json({message: `Product in Stock is 0`});
     }
-    ///
     products[productIndex] = {...products[productIndex],
         stock: products[productIndex].stock-1};
     fs.writeFileSync("./data/products.json", JSON.stringify(products));
@@ -81,6 +80,13 @@ app.post("/buy/:id", (req, res) => {
         data: products[productIndex],
     })
 })
+
+//ყველა პროდუქტის წაშლა
+app.delete("/products", (req, res) => {
+    fs.writeFileSync("./data/products.json", JSON.stringify([]));
+    res.status(200).send("All products deleted successfully.");
+});
+
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
