@@ -1,8 +1,10 @@
 import express from 'express';
 import fs from 'fs';
+import morgan from 'morgan';
 
 const app = express();
 app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
+app.use(morgan('dev')); //middleware
 
 //ჩემი მიდლვეარი
 app.use((req,res,next) => {
@@ -100,22 +102,42 @@ const deleteAllProducts = () => {
     res.status(200).send("All products deleted successfully.");
 };
 
-////////////////////////////////////
 
+//იუზერების
+const getUsers = (req, res) => {
+    res.json(JSON.parse(data));
+}
+const createUser = (req, res) => {
+    res.send("create new user");
+}
+const editUser = (req, res) => {
+    res.send("edit new user");
+}
+const deleteUser = (req, res) => {
+    res.send("delete  user");
+}
+///////////////////////////////////////////////////////////////////
+
+const productRouter = express.Router();//შევქმენი როუტერი
 // app.get("/products", getProducts);
 // app.post("/products",createProduct);
 //app.delete("/products", deleteAllProducts);
 //ზედა სამი ხაზის ანალოგიურია, ქვედა ერთი ხაზი//// რ ე ფ ა ქ ტ ო რ ი ნ გ ი
-app.route("/products").get(getProducts).post(createProduct).delete(deleteAllProducts);
+productRouter.route("/products").get(getProducts).post(createProduct).delete(deleteAllProducts);
 
 // app.put("/products/:id", editProduct);
 // app.patch("/products/:id", editOneProduct);
 // app.delete("/products/:id", deleteProduct);
-app.route("/products/:id").put(editProduct).patch(editOneProduct).delete(deleteProduct);
+productRouter.route("/products/:id").put(editProduct).patch(editOneProduct).delete(deleteProduct);
 
 // app.post("/products/buy/:id", buyProduct);
-app.route("/products/buy/:id").post(buyProduct);
+productRouter.route("/products/buy/:id").post(buyProduct);
 
+
+const usersRouter = express.Router();//როუტერი იუზერებისთვის
+//ეს როუტები არის იუზერებისთვის
+usersRouter.route("/users").get(getUsers).post(createUser);
+usersRouter.route("/products/:id").put(editProduct).put(deleteProduct);
 
 
 app.listen(3000, () => {
