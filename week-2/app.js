@@ -8,40 +8,33 @@ app.use(express.json()); //ეს არის მიდლვეარი
 const data = fs.readFileSync("./data/products.json", "utf8");
 
 
-// app.get("/", (req, res) => {
-//     res.send("Welcome");
-//     // res.end("Welcome");
-//     // res.json("Welcome");
-// })
+///////////////////////////////////////
 
-
-
-app.get("/products", (req, res) => {
+//პროდუქტების გამოძახება
+const getProducts = (req, res) => {
     res.json(JSON.parse(data));
-})
+}
 
 //პროდუქტის დამატება
-app.post("/products", (req, res) => {
+const createProduct = (req, res) => {
     const products = JSON.parse(data);
     const newProduct = {...req.body, id: Date.now(), createdAt: new Date().toISOString()};
     //Date.now იღებს იმ კონკრეტულ დროს,როცა შეიქმნა და იქნება უნიკალური და იმიტომ გვაწყობს ID-თ.
-
 
     // Homework-იდან მე-4 დავალება
     if (!newProduct.name || !newProduct.price) {
         res.status(406).json({message: "name and price are required"})
     }
-
     //ბექაფის გაკეთება დამატებამდე
     fs.copyFileSync("./data/products.json", `./data/products_backup_${newProduct.id}.json`);
 
     products.push(newProduct);
     fs.writeFileSync("./data/products.json", JSON.stringify(products));
     res.status(201).json(newProduct);
-});
+};
 
-//პროდუქტის  მონაცემების განახლება
-app.put("/products/:id", (req, res) => {
+//პროდუქტის  მონაცემების შეცვლა
+const editProduct = (req, res) => {
     const products = JSON.parse(data);
     const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
     const newProduct = req.body; //ბადიდან წამოსული პროდუქტი
@@ -49,10 +42,10 @@ app.put("/products/:id", (req, res) => {
     //რომლის შეცვლაც მინდა და შევცვლი იმით, რასაც კლიენტი გამმომიგზავნის.
     fs.writeFileSync("./data/products.json", JSON.stringify(products)); //განახლებულს ჩავწერ მონაცემთა ბაზაში
     res.json(newProduct);
-})
+};
 
 //პროდუქტის მხოლოდ ერთი მონაცემის განახლება
-app.path("/products/:id", (req, res) => {
+const editOneProduct = (req, res) => {
     const products = JSON.parse(data);
     const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
     const newProduct ={...products[productIndex], ...req.body} ;// აქამდე რაც იყო ვტოვებ იმას,
@@ -60,10 +53,10 @@ app.path("/products/:id", (req, res) => {
     products[productIndex] = newProduct;
     fs.writeFileSync("./data/products.json", JSON.stringify(products));
     res.json(newProduct);
-})
+};
 
 //პროდუქტის წაშლა
-app.delete("/products/:id", (req, res) => {
+const deleteProduct = (req, res) => {
     const products = JSON.parse(data);
 
     // Create a backup before deleting თაიმსტამპით
@@ -71,16 +64,14 @@ app.delete("/products/:id", (req, res) => {
 
     fs.writeFileSync(backupPath, JSON.stringify(products, null, 2));
 
-
     const newProducts = products.filter((product) => product.id !== parseInt(req.params.id));
 
     fs.writeFileSync("./data/products.json", JSON.stringify(newProducts));
     res.status(200).send("Product deleted successfully. Backup created.");
-})
-
+}
 
 //stock-ი უნდა შემცირდეს 1-ით ყიდვის შემთხვევაში
-app.post("/products/buy/:id", (req, res) => {
+const buyProduct = (req, res) => {
     const productId = parseInt(req.params.id);
 
     const products = JSON.parse(data);
@@ -97,14 +88,29 @@ app.post("/products/buy/:id", (req, res) => {
         massage: "you buy successfully!",
         data: products[productIndex],
     })
-})
+};
 
 //ყველა პროდუქტის წაშლა
-app.delete("/products", (req, res) => {
+const deleteAllProducts = () => {
     fs.writeFileSync("./data/products.json", JSON.stringify([]));
     res.status(200).send("All products deleted successfully.");
-});
+};
 
+////////////////////////////////////
+
+// app.get("/products", getProducts);
+// app.post("/products",createProduct);
+//app.delete("/products", deleteAllProducts);
+//ზედა სამი ხაზის ანალოგიურია, ქვედა ერთი ხაზი//// რ ე ფ ა ქ ტ ო რ ი ნ გ ი
+app.route("/products").get(getProducts).post(createProduct).delete(deleteAllProducts);
+
+// app.put("/products/:id", editProduct);
+// app.path("/products/:id", editOneProduct);
+// app.delete("/products/:id", deleteProduct);
+app.route("/products/:id").put(editProduct).path(editOneProduct).delete(deleteProduct);
+
+// app.post("/products/buy/:id", buyProduct);
+app.route("/products/buy/:id").post(buyProduct);
 
 
 
