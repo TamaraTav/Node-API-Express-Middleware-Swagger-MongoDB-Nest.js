@@ -2,11 +2,15 @@ import express from 'express';
 import fs from 'fs';
 
 const app = express();
+app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
 
-app.use(express.json()); //ეს არის მიდლვეარი
+//ჩემი მიდლვეარი
+app.use((req,res,next) => {
+    console.log('Hello from middleware');
+    next();
+});
 
 const data = fs.readFileSync("./data/products.json", "utf8");
-
 
 ///////////////////////////////////////
 
@@ -105,9 +109,9 @@ const deleteAllProducts = () => {
 app.route("/products").get(getProducts).post(createProduct).delete(deleteAllProducts);
 
 // app.put("/products/:id", editProduct);
-// app.path("/products/:id", editOneProduct);
+// app.patch("/products/:id", editOneProduct);
 // app.delete("/products/:id", deleteProduct);
-app.route("/products/:id").put(editProduct).path(editOneProduct).delete(deleteProduct);
+app.route("/products/:id").put(editProduct).patch(editOneProduct).delete(deleteProduct);
 
 // app.post("/products/buy/:id", buyProduct);
 app.route("/products/buy/:id").post(buyProduct);
