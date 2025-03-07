@@ -1,6 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
-import productRouter from "./routes/productsRoute.js";
+import productRouter from "./routes/productRoute.js";
 
 const app = express();
 app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
