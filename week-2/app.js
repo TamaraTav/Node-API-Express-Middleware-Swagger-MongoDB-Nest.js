@@ -2,6 +2,10 @@ import express from 'express';
 import morgan from 'morgan';
 import productRouter from "./routes/productRoute.js";
 import usersRouter from "./routes/userRoute.js";
+import dotenv from "dotenv";
+
+dotenv.config({path: "./config.env"});
+console.log(process.env.DB_USER);
 
 const app = express();
 
