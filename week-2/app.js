@@ -4,8 +4,17 @@ import productRouter from "./routes/productRoute.js";
 import usersRouter from "./routes/userRoute.js";
 
 const app = express();
+
+// console.log(app.get("env")); //ტოლია development-ის
+console.log(process.env.NODE_ENV); //
+
 app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
-app.use(morgan('dev')); //middleware
+
+if(process.env.NODE_ENV !== 'development') {
+    app.use(morgan('dev')); //middleware
+    //თუ ჩემი გარემოა დეველოპერის, მაგ დროს გამოიყენოს მორგანი
+}
+
 
 //ჩემი მიდლვეარი
 app.use((req,res,next) => {
