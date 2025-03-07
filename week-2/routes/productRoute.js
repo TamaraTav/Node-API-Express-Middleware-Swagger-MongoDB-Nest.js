@@ -1,12 +1,9 @@
 import express from "express";
-import fs from "fs";
+
 import {getProducts, createProduct,editProduct,
     editOneProduct,deleteProduct,buyProduct,deleteAllProducts} from "../controllers/productController.js";
 
-const productRouter = express.Router();//შევქმენი როუტერი
-
-
-
+const productRouter = express.Router();//შევქმენი როუტერი პროდუქტებისთვის
 
 
 productRouter.route("/").get(getProducts).post(createProduct).delete(deleteAllProducts);
