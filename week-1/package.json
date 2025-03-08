@@ -1,7 +1,7 @@
 {
   "name": "node-api-express-middleware-swagger-mongodb-nest",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index2.js",
   "type": "module",
   "scripts": {
     "start": "nodemon index2.js",

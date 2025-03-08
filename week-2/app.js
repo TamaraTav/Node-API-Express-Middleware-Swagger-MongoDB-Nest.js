@@ -4,6 +4,7 @@ import productRouter from "./routes/productRoute.js";
 import usersRouter from "./routes/userRoute.js";
 import dotenv from "dotenv";
 import requestInfo from "./middlewares/requestInfo.js"
+import maintenance  from "./middlewares/maintenance.js";
 
 dotenv.config({path: "./config.env"});
 const PORT = process.env.PORT || 3000;
@@ -12,8 +13,12 @@ const app = express();
 
 // console.log(app.get("env")); //ტოლია development-ის
 console.log(process.env.NODE_ENV); //
+console.log(process.env.DB_USER);
 
-app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
+
+if (process.env.NODE_ENV === "production") {
+    app.use(maintenance);
+}
 
 if(process.env.NODE_ENV !== 'development') {
     app.use(morgan('dev')); //middleware
@@ -22,6 +27,9 @@ if(process.env.NODE_ENV !== 'development') {
     //ჩემი მიდლვეარი მორგანისნაირი გადმოვაიმპორტე მიდელვეარების პაპკიდან
     app.use(requestInfo);
 }
+
+app.use(express.json()); //ეს არის მიდლვეარი, უნდა იყოს თავში.
+
 
 
 //ჩემი მიდლვეარი
