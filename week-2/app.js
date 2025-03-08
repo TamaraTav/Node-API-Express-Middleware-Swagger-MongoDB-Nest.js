@@ -10,7 +10,7 @@ import {rateLimit} from "express-rate-limit";
 
 
 dotenv.config({path: "./config.env"});
-const PORT = process.env.PORT || 3000;
+
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.use(express.json()); //ეს არის მიდლვეარი, უ�
 
 //ჩემი მიდლვეარი
 app.use((req,res,next) => {
-    console.log('Hello from middleware');
+    console.log('Hello from my middleware');
     next();
 });
 
@@ -56,7 +56,4 @@ app.use("/users", usersRouter); //ესეც რჩება აქ
 //////////////////////////////////////////////////////////////////
 
 
-
-app.listen(PORT, () => {
-    console.log("Server is running on port 3000");
-});
+export default app;
