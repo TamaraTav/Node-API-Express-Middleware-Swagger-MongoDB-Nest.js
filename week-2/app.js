@@ -5,6 +5,9 @@ import usersRouter from "./routes/userRoute.js";
 import dotenv from "dotenv";
 import requestInfo from "./middlewares/requestInfo.js"
 import maintenance  from "./middlewares/maintenance.js";
+import {rateLimit} from "express-rate-limit";
+
+
 
 dotenv.config({path: "./config.env"});
 const PORT = process.env.PORT || 3000;
@@ -19,6 +22,13 @@ console.log(process.env.DB_USER);
 if (process.env.NODE_ENV === "production") {
     app.use(maintenance);
 }
+app.use(rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 3,
+    message: "Too many requests"
+})
+);
+
 
 if(process.env.NODE_ENV !== 'development') {
     app.use(morgan('dev')); //middleware
