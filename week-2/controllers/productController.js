@@ -7,39 +7,69 @@ const data = fs.readFileSync("./data/products.json", "utf8");
 
 //პროდუქტების გამოძახება
 const getProducts = async (req, res) => {
-    const product = await Product.find({category: "Computers"});
-    //გაფილტრავს მარტო Computers კატეგორიით
-    res.json(product);
+    try {
+        const product = await Product.find({});
+        //გაფილტრავს მარტო Computers კატეგორიით {category: "Computers"}
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
 }
 
-//პროდუქტის დამატება
-const createProduct = (req, res) => {
-    const products = JSON.parse(data);
-    const newProduct = {...req.body, id: Date.now(), createdAt: new Date().toISOString()};
-    //Date.now იღებს იმ კონკრეტულ დროს,როცა შეიქმნა და იქნება უნიკალური და იმიტომ გვაწყობს ID-თ.
 
-    // Homework-იდან მე-4 დავალება
-    if (!newProduct.name || !newProduct.price) {
-        res.status(406).json({message: "name and price are required"})
+//პროდუქტის დამატება,  ქვემოთ მიწერია ხელახლა მონგუსით, მაგრამ არ მუშაობს!!!!!!!!!!!!!!!!!!!!!
+// const createProduct = (req, res) => {
+//     const products = JSON.parse(data);
+//     const newProduct = {...req.body, id: Date.now(), createdAt: new Date().toISOString()};
+//     //Date.now იღებს იმ კონკრეტულ დროს,როცა შეიქმნა და იქნება უნიკალური და იმიტომ გვაწყობს ID-თ.
+//
+//     // Homework-იდან მე-4 დავალება
+//     if (!newProduct.name || !newProduct.price) {
+//         res.status(406).json({message: "name and price are required"})
+//     }
+//     //ბექაფის გაკეთება დამატებამდე
+//     fs.copyFileSync("./data/products.json", `./data/products_backup_${newProduct.id}.json`);
+//
+//     products.push(newProduct);
+//     fs.writeFileSync("./data/products.json", JSON.stringify(products));
+//     res.status(201).json(newProduct);
+// };
+
+const createProduct =   (req, res) => {
+    try {
+        const product = new Product(
+            {...req.body, id: Date.now()});
+        product.save();
+        res.status(201).json(product);
+    }  catch (error) {
+        res.status(400).json({message: error.message});
     }
-    //ბექაფის გაკეთება დამატებამდე
-    fs.copyFileSync("./data/products.json", `./data/products_backup_${newProduct.id}.json`);
+}
 
-    products.push(newProduct);
-    fs.writeFileSync("./data/products.json", JSON.stringify(products));
-    res.status(201).json(newProduct);
-};
 
 //პროდუქტის  მონაცემების შეცვლა
-const editProduct = (req, res) => {
-    const products = JSON.parse(data);
-    const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
-    const newProduct = req.body; //ბადიდან წამოსული პროდუქტი
-    products[productIndex] = newProduct; // პროდუქტებიდან ამოვიღებ კონკრეტულად იმ ინდექსის მქონე ელემენტს
-    //რომლის შეცვლაც მინდა და შევცვლი იმით, რასაც კლიენტი გამმომიგზავნის.
-    fs.writeFileSync("./data/products.json", JSON.stringify(products)); //განახლებულს ჩავწერ მონაცემთა ბაზაში
-    res.json(newProduct);
-};
+// const editProduct = (req, res) => {
+//     const products = JSON.parse(data);
+//     const productIndex = products.findIndex((product) => product.id === parseInt(req.params.id));
+//     const newProduct = req.body; //ბადიდან წამოსული პროდუქტი
+//     products[productIndex] = newProduct; // პროდუქტებიდან ამოვიღებ კონკრეტულად იმ ინდექსის მქონე ელემენტს
+//     //რომლის შეცვლაც მინდა და შევცვლი იმით, რასაც კლიენტი გამმომიგზავნის.
+//     fs.writeFileSync("./data/products.json", JSON.stringify(products)); //განახლებულს ჩავწერ მონაცემთა ბაზაში
+//     res.json(newProduct);
+// };
+
+const editProduct = async (req, res) => {
+    const updateProduct = await Product.findOneAndUpdate(
+        { id: parseInt(req.params.id)},
+        req.body,
+        { new: true }
+    );
+    if (!updateProduct) {
+        res.status(404).json({message: "Product not found"});
+    }
+    res.json(updateProduct);
+}
+
 
 //პროდუქტის მხოლოდ ერთი მონაცემის განახლება
 const editOneProduct = (req, res) => {
@@ -53,18 +83,26 @@ const editOneProduct = (req, res) => {
 };
 
 //პროდუქტის წაშლა
-const deleteProduct = (req, res) => {
-    const products = JSON.parse(data);
+// const deleteProduct = (req, res) => {
+//     const products = JSON.parse(data);
+//
+//     // Create a backup before deleting თაიმსტამპით
+//     const backupPath = `./data/products_backup_${Date.now()}.json`;
+//
+//     fs.writeFileSync(backupPath, JSON.stringify(products, null, 2));
+//
+//     const newProducts = products.filter((product) => product.id !== parseInt(req.params.id));
+//
+//     fs.writeFileSync("./data/products.json", JSON.stringify(newProducts));
+//     res.status(200).send("Product deleted successfully. Backup created.");
+// }
 
-    // Create a backup before deleting თაიმსტამპით
-    const backupPath = `./data/products_backup_${Date.now()}.json`;
-
-    fs.writeFileSync(backupPath, JSON.stringify(products, null, 2));
-
-    const newProducts = products.filter((product) => product.id !== parseInt(req.params.id));
-
-    fs.writeFileSync("./data/products.json", JSON.stringify(newProducts));
-    res.status(200).send("Product deleted successfully. Backup created.");
+const deleteProduct = async (req, res) => {
+    const deleteProduct = await Product.findByIdAndDelete({id: parseInt(req.params.id)});
+    if (!deleteProduct) {
+        res.status(404).json({message: "Product not found"});
+    }
+    res.json({message: "Product deleted successfully"});
 }
 
 //stock-ი უნდა შემცირდეს 1-ით ყიდვის შემთხვევაში
