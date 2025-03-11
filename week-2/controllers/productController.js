@@ -16,6 +16,11 @@ const getProducts = async (req, res) => {
         if(req.query.sort) query = query.sort(req.query.sort);
         if(req.query.fields) query = query.select(req.query.fields.split(",").join( ' '));
 
+        //პ ა გ ი ნ ა ც ი ა
+        const page = parseInt(req.query.page) *1 || 1;
+        const limit = parseInt(req.query.limit) *1 || 100;
+        const skip = (page - 1) * limit;
+        query = query.skip(skip).limit(limit);
 
         const product = await query
         res.json(product);
