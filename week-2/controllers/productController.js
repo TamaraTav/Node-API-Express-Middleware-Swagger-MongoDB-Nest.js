@@ -35,11 +35,11 @@ const getProducts = async (req, res) => {
 //     res.status(201).json(newProduct);
 // };
 
-const createProduct =   (req, res) => {
+const createProduct =  async (req, res) => {
     try {
-        const product = new Product(
+        const product =  new Product(
             {...req.body, id: Date.now()});
-        product.save();
+        await product.save();
         res.status(201).json(product);
     }  catch (error) {
         res.status(400).json({message: error.message});
