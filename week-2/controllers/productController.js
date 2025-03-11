@@ -3,20 +3,21 @@ import Product from "../models/productModel.js";
 
 const data = fs.readFileSync("./data/products.json", "utf8");
 
-
-
 //პროდუქტების გამოძახება
 const getProducts = async (req, res) => {
-    let query =  Product.find();
     const  excludeFields = ['page', 'limit', 'sort' , 'fields'];
     const queryObj = {...req.query};
 
-    excludeFields.forEach((el) => delete queryObj[el]);
     try {
-        query =  query.find(queryObj);
-        query = query.sort(req.query.sort);
+        let query =  Product.find();
+        excludeFields.forEach((el) => delete queryObj[el]);
 
-    const product = await query
+        query =  query.find(queryObj);
+        if(req.query.sort) query = query.sort(req.query.sort);
+        if(req.query.fields) query = query.select(req.query.fields.split(",").join( ' '));
+
+
+        const product = await query
         res.json(product);
     } catch (error) {
         res.status(400).json({message: error.message});
