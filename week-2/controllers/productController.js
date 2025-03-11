@@ -7,10 +7,16 @@ const data = fs.readFileSync("./data/products.json", "utf8");
 
 //პროდუქტების გამოძახება
 const getProducts = async (req, res) => {
-    console.log(req.query);
+    let query =  Product.find();
+    const  excludeFields = ['page', 'limit', 'sort' , 'fields'];
+    const queryObj = {...req.query};
+
+    excludeFields.forEach((el) => delete queryObj[el]);
     try {
-        const product = await Product.find(req.query);
-        //გაფილტრავს მარტო Computers კატეგორიით {category: "Computers"} ან ავტომატურად req.query-თ
+        query =  query.find(queryObj);
+        query = query.sort(req.query.sort);
+
+    const product = await query
         res.json(product);
     } catch (error) {
         res.status(400).json({message: error.message});
