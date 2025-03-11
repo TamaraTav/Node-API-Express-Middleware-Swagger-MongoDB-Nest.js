@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production") {
 }
 app.use(rateLimit({
     windowMs: 60 * 60 * 1000,
-    limit: 3,
+    limit: 10,
     message: "Too many requests"
 })
 );
