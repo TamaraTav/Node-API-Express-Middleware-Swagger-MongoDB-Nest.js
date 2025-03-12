@@ -2,7 +2,7 @@ import express from "express";
 import productSlugify from "../middlewares/productSlugify.js";
 
 import {getProducts, createProduct,editProduct,
-    editOneProduct,deleteProduct,buyProduct,deleteAllProducts} from "../controllers/productController.js";
+    editOneProduct,deleteProduct,buyProduct,deleteAllProducts, getCategoryStats} from "../controllers/productController.js";
 
 const productRouter = express.Router();//შევქმენი როუტერი პროდუქტებისთვის
 
@@ -11,6 +11,8 @@ productRouter.route("/").get(getProducts).post(productSlugify, createProduct).de
 productRouter.route("/:id").put(editProduct).patch(editOneProduct).delete(deleteProduct);
 productRouter.route("/:id").put(editProduct).patch(editOneProduct).delete(deleteProduct);
 productRouter.route("/buy/:id").post(buyProduct);
+productRouter.route("/stats").get(getCategoryStats);
+
 
 
 export default productRouter;

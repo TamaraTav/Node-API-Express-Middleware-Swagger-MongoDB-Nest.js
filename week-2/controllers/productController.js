@@ -129,6 +129,21 @@ const deleteAllProducts = () => {
     res.status(200).send("All products deleted successfully.");
 };
 
+const getCategoryStats = async (req, res) => {
+    const stats = await Product.aggregate([
+        {
+            $group : {
+                _id: "$category",
+                numProducts: { $sum: 1},
+                avgPrice: { $avg: "$price" },
+                minPrice: { $min: "$price" },
+                maxPrice: { $max: "$price" },
+            },
+        },
+    ])
+    res.json(stats);
+}
+
 
 export {getProducts,createProduct,editProduct,
-    editOneProduct,deleteProduct,buyProduct,deleteAllProducts};
+    editOneProduct,deleteProduct,buyProduct,deleteAllProducts, getCategoryStats};
