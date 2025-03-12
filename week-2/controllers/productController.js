@@ -96,12 +96,17 @@ const editOneProduct = (req, res) => {
 // }
 
 const deleteProduct = async (req, res) => {
-    const deleteProduct = await Product.findByIdAndDelete({id: parseInt(req.params.id)});
-    if (!deleteProduct) {
-        res.status(404).json({message: "Product not found"});
+    try {
+        const deleteProduct = await Product.findOneAndDelete({id: parseInt(req.params.id)});
+        if (!deleteProduct) {
+            res.status(404).json({message: "Product not found"});
+        }
+        res.json({message: "Product deleted successfully"});
+    } catch (err) {
+        res.status(500).json({message: "შ ე უ ძ ლ ე ბ ე ლ ი ა"});
     }
-    res.json({message: "Product deleted successfully"});
-}
+
+};
 
 //stock-ი უნდა შემცირდეს 1-ით ყიდვის შემთხვევაში
 const buyProduct = (req, res) => {
@@ -140,7 +145,9 @@ const getCategoryStats = async (req, res) => {
                 maxPrice: { $max: "$price" },
             },
         },
-    ])
+        {$sort : {avgPrice: -1}} //თან დავსორტე
+    ]);
+
     res.json(stats);
 }
 
