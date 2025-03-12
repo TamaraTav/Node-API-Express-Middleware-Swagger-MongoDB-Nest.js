@@ -1,28 +1,13 @@
 import fs from "fs";
 import Product from "../models/productModel.js";
-
+import filterService from "../services/filterService.js";
 const data = fs.readFileSync("./data/products.json", "utf8");
 
 //პროდუქტების გამოძახება
 const getProducts = async (req, res) => {
-    const  excludeFields = ['page', 'limit', 'sort' , 'fields'];
-    const queryObj = {...req.query};
-
+    const query =  filterService(Product.find(), req.query);
     try {
-        let query =  Product.find();
-        excludeFields.forEach((el) => delete queryObj[el]);
-
-        query =  query.find(queryObj);
-        if(req.query.sort) query = query.sort(req.query.sort);
-        if(req.query.fields) query = query.select(req.query.fields.split(",").join( ' '));
-
-        //პ ა გ ი ნ ა ც ი ა
-        const page = parseInt(req.query.page) *1 || 1;
-        const limit = parseInt(req.query.limit) *1 || 100;
-        const skip = (page - 1) * limit;
-        query = query.skip(skip).limit(limit);
-
-        const product = await query
+        const product = await query;
         res.json(product);
     } catch (error) {
         res.status(400).json({message: error.message});
