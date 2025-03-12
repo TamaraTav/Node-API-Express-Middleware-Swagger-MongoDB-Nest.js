@@ -12,6 +12,9 @@ const productSchema = new mongoose.Schema({
     slug: { type: String },
     createdAt: { type: Date, default: Date.now },
     //timestamps: true  //ეს გასატესტი მაქვს
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
 });
 
 productSchema.pre('findOneAndDelete', async function (next) {
@@ -25,8 +28,11 @@ productSchema.pre('findOneAndDelete', async function (next) {
 
 productSchema.post('save',  function (doc, ) {
     console.log("Product saved", doc);
+});
 
-})
+productSchema.virtual('status').get(function () {
+    return this.stock > 0 ? "Available" : "Not Available";
+});
 
 
 
