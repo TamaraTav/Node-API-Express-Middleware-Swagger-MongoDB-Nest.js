@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
     stock: { type: Number, required: true },
     slug: { type: String },
     createdAt: { type: Date, default: Date.now },
+    archived: { type: Boolean, default: false },
     //timestamps: true  //ეს გასატესტი მაქვს
 }, {
     toJSON: { virtuals: true },
@@ -41,6 +42,12 @@ productSchema.virtual('priceWithTax').get(function () {
 productSchema.virtual('capacity').get(function () {
     return this.price * this.stock;
 })
+
+
+//როცა ჩვენ თითონ ვქმნით მეთოდს
+productSchema.statics.archived  = async function (filter) {
+    return this.updateOne(filter, {archived: true});
+}
 
 
 

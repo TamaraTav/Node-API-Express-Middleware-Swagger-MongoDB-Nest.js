@@ -97,11 +97,11 @@ const editOneProduct = (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const deleteProduct = await Product.findOneAndDelete({id: parseInt(req.params.id)});
+        const deleteProduct = await Product.archived({id: parseInt(req.params.id)});
         if (!deleteProduct) {
             res.status(404).json({message: "Product not found"});
         }
-        res.json({message: "Product deleted successfully"});
+        res.json({message: "Product archived successfully"});
     } catch (err) {
         res.status(500).json({message: "შ ე უ ძ ლ ე ბ ე ლ ი ა"});
     }
