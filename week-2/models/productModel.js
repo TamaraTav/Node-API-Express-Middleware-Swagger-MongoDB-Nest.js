@@ -38,6 +38,10 @@ productSchema.virtual('priceWithTax').get(function () {
     return this.price * 1.2;
 });
 
+productSchema.virtual('capacity').get(function () {
+    return this.price * this.stock;
+})
+
 
 
 
