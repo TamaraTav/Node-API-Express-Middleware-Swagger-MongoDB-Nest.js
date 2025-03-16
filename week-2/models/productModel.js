@@ -34,6 +34,11 @@ productSchema.virtual('status').get(function () {
     return this.stock > 0 ? "Available" : "Not Available";
 });
 
+productSchema.virtual('priceWithTax').get(function () {
+    return this.price * 1.2;
+});
+
+
 
 
 const Product = mongoose.model("Product", productSchema);
