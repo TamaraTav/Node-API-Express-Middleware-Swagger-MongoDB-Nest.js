@@ -5,7 +5,7 @@ const data = fs.readFileSync("./data/products.json", "utf8");
 
 //პროდუქტების გამოძახება
 const getProducts = async (req, res) => {
-    const query =  filterService(Product.find(), req.query);
+    const query =  filterService(Product.find(), req.query); //აქ უნდა ჩავამატო წამოიღოს მხოლოდ {archived: false}
     try {
         const product = await query;
         res.json(product);
