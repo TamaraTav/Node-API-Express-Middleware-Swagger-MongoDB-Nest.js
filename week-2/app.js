@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import requestInfo from "./middlewares/requestInfo.js"
 import maintenance  from "./middlewares/maintenance.js";
 import {rateLimit} from "express-rate-limit";
+import swaggerUI from "swagger-ui-express";  //შემოვაიმპორტე სვაგერ ექსპრესიდან
+import specs  from "./middlewares/swagger.js";
 
 
 
@@ -28,6 +30,8 @@ app.use(rateLimit({
     message: "Too many requests"
 })
 );
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));    //სვაგერის მიდელვეარი
 
 
 if(process.env.NODE_ENV !== 'development') {

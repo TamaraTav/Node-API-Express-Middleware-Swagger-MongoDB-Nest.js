@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import req from "express/lib/request.js";
+import stockHistoryModel from "./stockHistoryModel.js";
+import StockHistory from "./stockHistoryModel.js";
 
 
 const productSchema = new mongoose.Schema({
@@ -31,6 +33,25 @@ productSchema.post('save',  function (doc, ) {
     console.log("Product saved", doc);
 });
 
+
+//5 დავალება
+productSchema.pre('findOneAndUpdate', async function (next) {
+    const update = this.getUpdate();
+    if (!update.stock ) return next();
+    const product = await this.model.findOne(this.getQuery());
+
+    if(update.stock === product.stock) return next();
+
+    await StockHistory.create({
+        productId: product._id,
+        previousStock: product.stock,
+        nextStock: update.stock,
+    });
+});
+
+
+
+///////////////////////
 productSchema.virtual('status').get(function () {
     return this.stock > 0 ? "Available" : "Not Available";
 });

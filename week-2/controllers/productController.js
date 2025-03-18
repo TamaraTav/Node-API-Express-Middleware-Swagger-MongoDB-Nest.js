@@ -152,6 +152,7 @@ const getCategoryStats = async (req, res) => {
 }
 
 
+//4 დავალება
 const getPriceStats = async (req, res) => {
     try {
         const priceRange = await Product.aggregate([
@@ -190,6 +191,7 @@ const getPriceStats = async (req, res) => {
         res.status(500).json({message: err.message});
     }
 }
+
 
 
 export {getProducts,createProduct,editProduct,
