@@ -152,5 +152,46 @@ const getCategoryStats = async (req, res) => {
 }
 
 
+const getPriceStats = async (req, res) => {
+    try {
+        const priceRange = await Product.aggregate([
+            {
+                $bucket: {
+                    groupBy: "$price",
+                    boundaries: [0, 100, 200, 300],
+                    default: 'Other',
+                    output: {
+                        count: {$sum: 1},
+                        max: {$max: '$price'},
+                        min: {$min: '$price'},
+                        avg: {$avg: '$price'},
+                    }
+                },
+            },
+
+            {
+                $addFields: {
+                    range: {
+                        $switch: {
+                            branches: [
+                                {case: {$lt: ['_id', 100]}, then: '0-100'},
+                                {case: {$lt: ['$_id', 200]}, then: '100-200'},
+                                {case: {$lt: ['$_id', 300]}, then: '200-300'},
+                            ],
+                            default: '300+',
+                        },
+                    },
+                },
+            },
+        ]);
+        res.json(priceRange);
+
+    }catch(err) {
+        res.status(500).json({message: err.message});
+    }
+}
+
+
 export {getProducts,createProduct,editProduct,
-    editOneProduct,deleteProduct,buyProduct,deleteAllProducts, getCategoryStats};
+    editOneProduct,deleteProduct,buyProduct,deleteAllProducts,
+    getCategoryStats, getPriceStats};
