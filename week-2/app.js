@@ -22,14 +22,15 @@ console.log(process.env.DB_USER);
 
 
 if (process.env.NODE_ENV === "production") {
+    app.use(rateLimit({
+            windowMs: 60 * 60 * 1000,
+            limit: 10,
+            message: "Too many requests"
+        })
+    );
     app.use(maintenance);
 }
-app.use(rateLimit({
-    windowMs: 60 * 60 * 1000,
-    limit: 10,
-    message: "Too many requests"
-})
-);
+
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));    //სვაგერის მიდელვეარი
 
