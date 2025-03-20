@@ -1,9 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const userRoutes = require('./src/routes/userRoutes');
+import dotenv from "dotenv";
+dotenv.config();
+import express from 'express';
+import productRoutes from './routes/productRoutes.js';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 //Middleware
 app.use(express.json());
@@ -12,7 +13,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.json({message:'Welcome to the Express PostgreSQL API'});
 });
-app.use('/api/products', userRoutes);
+app.use('/api/products', productRoutes);
 
 
 //Error handling middleware
